@@ -1,6 +1,9 @@
 use std::path::PathBuf;
 use structopt::StructOpt;
 
+extern crate fen2image;
+use fen2image::*;
+
 #[derive(Debug, StructOpt)]
 #[structopt(name = "fen2image", about = "An example of StructOpt usage.")]
 struct Options {
@@ -32,6 +35,10 @@ struct Options {
 
 fn main() {
     let opt = Options::from_args();
+
     println!("{:#?}", opt);
     println!("{:#?}", opt.fen);
+
+    let board = get_board_from_fen(&opt.fen);
+    println!("{:?}", board);
 }

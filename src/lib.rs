@@ -7,6 +7,66 @@ fn is_valid_fen(fen: &str) -> bool {
 	re.is_match(fen)
 }
 
+type ChessBoardLine = [char; 8];
+type ChessBoard = [ChessBoardLine;8];
+
+fn default_board() -> ChessBoard {
+	let default_board: ChessBoard = [
+        ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+        ['p'; 8],
+        [' '; 8],
+        [' '; 8],
+        [' '; 8],
+        [' '; 8],
+        ['P'; 8],
+        ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+    ];
+
+    default_board
+}
+
+fn empty_board() -> ChessBoard {
+	[[' '; 8]; 8]
+}
+
+fn get_board_line_from_fen(fen_line: &str) -> Result<ChessBoardLine, String> {
+	let mut line = [' '; 8];
+
+	let mut pos = 0usize;
+	let validPieces = ['r', 'n', 'b', 'q', 'k', 'p', 'R', 'N', 'B', 'Q', 'K', 'P'];
+	for cell in fen_line.chars() {
+		if pos >= 8 {
+			return Err(format!("Invalid column offset (>8) in {}", fen_line));
+		}
+		if validPieces.contains(&cell) {
+			line[pos] = cell;
+			pos += 1;
+		} else {
+			let offset = cell.to_digit(10u32).unwrap() as usize;
+			pos += offset;
+		}
+	}
+
+	Ok(line)
+}
+
+pub fn get_board_from_fen(fen: &str) -> Result<ChessBoard, String> {
+	if !is_valid_fen(fen) {
+		return Err("Invalid fen".to_string());
+	} 
+	let mut splits = fen.split(" ");
+	let lines = splits.next().unwrap().split("/");
+
+	let mut board = empty_board();
+	for (y, line) in lines.enumerate() {
+		match get_board_line_from_fen(&line) {
+			Ok(line) => board[y as usize] = line,
+			Err(s) => return Err(s)
+		};
+	}
+	return Ok(board);
+}
+
 #[cfg(test)]
 mod tests {
 	use super::*;
