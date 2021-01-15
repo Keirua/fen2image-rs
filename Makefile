@@ -3,13 +3,13 @@ GO_BIN=go
 .PHONY: build clean fmt test
 
 build:
-	$(GO_BIN) build
+	cargo build
 
 clean:
-	rm -rf *.png && rm fen2image
+	cargo clean
 
 fmt:
-	$(GO_BIN) fmt
+	cargo fmt
 
 test:
-	$(GO_BIN) test
+	cargo test
