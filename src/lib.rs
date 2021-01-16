@@ -67,6 +67,23 @@ pub fn get_board_from_fen(fen: &str) -> Result<ChessBoard, String> {
 	return Ok(board);
 }
 
+pub fn display_board(board: &ChessBoard) {
+	for l in board {
+		println!("{}", l.iter().collect::<String>());
+	}
+}
+
+extern crate image;
+use image::io::Reader as ImageReader;
+use image::ImageError;
+
+pub fn generate_image(fen: &str, output_file: &str) -> Result<(), image::ImageError> {
+	let bishop = ImageReader::open("icons/B60.png")?.decode()?;
+
+	Ok(())
+}
+
+
 #[cfg(test)]
 mod tests {
 	use super::*;
