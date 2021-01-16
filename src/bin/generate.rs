@@ -42,7 +42,7 @@ fn main() {
     if let Ok(board) = get_board_from_fen(&opt.fen) {
         println!("{:?}", board);
         display_board(&board);
+        generate_image(&board, "board.png", 60);
     }
 
-    generate_image("3q1rk1/5pbp/5Qp1/8/8/2B5/5PPP/6K1 w q - 0 1", "board.png", 60);
 }
