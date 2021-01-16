@@ -44,5 +44,5 @@ fn main() {
         display_board(&board);
     }
 
-    generate_image("3q1rk1/5pbp/5Qp1/8/8/2B5/5PPP/6K1 w q - 0 1", "board.png");
+    generate_image("3q1rk1/5pbp/5Qp1/8/8/2B5/5PPP/6K1 w q - 0 1", "board.png", 60);
 }

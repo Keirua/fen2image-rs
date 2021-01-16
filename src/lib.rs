@@ -77,10 +77,32 @@ extern crate image;
 use image::io::Reader as ImageReader;
 use image::ImageError;
 
-pub fn generate_image(fen: &str, output_file: &str) -> Result<(), image::ImageError> {
+pub fn generate_image(fen: &str, output_file: &str, cell_size: u32) -> Result<(), image::ImageError> {
 	let bishop = ImageReader::open("icons/B60.png")?.decode()?;
 
-	Ok(())
+	// let board_image = ImageWriter::open(output_file)?.decode()?;
+	let imgx = 8 * cell_size;
+	let imgy = 8 * cell_size;
+	// Create a new ImgBuf with width: imgx and height: imgy
+    let mut imgbuf = image::ImageBuffer::new(imgx, imgy);
+
+    // Iterate over the coordinates and pixels of the image
+    for (x, y, pixel) in imgbuf.enumerate_pixels_mut() {
+ 	    // var whiteColor = color.RGBA{222, 227, 230, 255}
+	    // var blackColor = color.RGBA{140, 162, 173, 255}
+    	let white = [222u8,227u8,230u8];
+    	let black = [140u8,162u8,173u8];
+
+        // let r = (0.3 * x as f32) as u8;
+        // let b = (0.3 * y as f32) as u8;
+        if (((x/cell_size as u32) + (y/cell_size as u32)) % 2) == 1 {
+        	*pixel = image::Rgb(black);
+        } else {
+        	*pixel = image::Rgb(white);
+        }
+    }
+
+    imgbuf.save(output_file)
 }
 
 
