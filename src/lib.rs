@@ -77,8 +77,8 @@ extern crate image;
 // use image::io::Reader as ImageReader;
 use image::ImageError;
 use std::collections::HashMap;
-use image::GenericImageView;
 use image::DynamicImage;
+use image::imageops;
 
 pub fn generate_image(board: &ChessBoard, output_file: &str, cell_size: u32) -> Result<(), image::ImageError> {
 	let validPieces = ['r', 'n', 'b', 'q', 'k', 'p', 'R', 'N', 'B', 'Q', 'K', 'P'];
@@ -93,15 +93,27 @@ pub fn generate_image(board: &ChessBoard, output_file: &str, cell_size: u32) -> 
     let mut imgbuf = image::ImageBuffer::new(imgx, imgy);
 
     for (x, y, pixel) in imgbuf.enumerate_pixels_mut() {
-    	let white = [222u8,227u8,230u8];
-    	let black = [140u8,162u8,173u8];
+    	let white = [222u8,227u8,230u8, 255u8];
+    	let black = [140u8,162u8,173u8, 255u8];
 
         if (((x/cell_size as u32) + (y/cell_size as u32)) % 2) == 1 {
-        	*pixel = image::Rgb(black);
+        	*pixel = image::Rgba(black);
         } else {
-        	*pixel = image::Rgb(white);
+        	*pixel = image::Rgba(white);
         }
     }
+
+    for (y, line) in board.iter().enumerate() {
+		for (x, cell) in line.iter().enumerate() {
+			if validPieces.contains(cell) {
+				if let Some(piece) = piecesImages.get(cell) {
+					imageops::overlay(&mut imgbuf, piece, (x as u32) * cell_size, (y as u32)*cell_size);
+				} else {
+					println!("{:?} is not a valid image", cell);
+				}
+			}
+		}
+	}
 
     imgbuf.save(output_file)
 }
